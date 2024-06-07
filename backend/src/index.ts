@@ -1,19 +1,29 @@
-import express from "express"
-import { config } from "dotenv";
-config(); //used to connect to mongo
-const app = express();
 
-// middleware
-app.use(express.json());
+import app from "./app.js";
+import connectToDatabase from "./db/connection.js";
+
+const PORT = process.env.PORT || 5000;
+// Server works only when database is connected:
+connectToDatabase().then(() => {
+    app.listen(PORT, () => console.log("Server is open and connected"));
+}).catch((err) => console.log(err));
+
+
+
+
+
+
+
+
+// import express from "express"
+// import { config } from "dotenv";
+// config(); //used to connect to mongo
+// const app = express();
+
+// // middleware
+// app.use(express.json());
 
 // connection and listeners
-app.listen(5000, () => console.log("Server is open"));
-
-
-
-
-
-
 
 // import express from "express"
 
