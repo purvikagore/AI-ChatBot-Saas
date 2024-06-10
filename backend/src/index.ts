@@ -9,12 +9,6 @@ connectToDatabase().then(() => {
 }).catch((err) => console.log(err));
 
 
-
-
-
-
-
-
 // import express from "express"
 // import { config } from "dotenv";
 // config(); //used to connect to mongo
