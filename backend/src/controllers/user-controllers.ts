@@ -1,6 +1,8 @@
 import User from "../models/User.js"
 import { NextFunction, Request, Response } from "express";
 import { hash, compare } from 'bcrypt';
+import { createToken } from "../utils/token-manager.js";
+import { COOKIE_NAME } from "../utils/constants.js";
 
 export const getAllUsers = async (req:Request, res:Response, next:NextFunction) => {
     // get all users from db
@@ -25,6 +27,27 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
         // brand new user
         const user = new User({ name, email, password: hashedPassword });
         await user.save();
+
+        // create token and store cookie
+        res.clearCookie(COOKIE_NAME, {
+            domain:"localhost", httpOnly:true, signed : true, path:'/',
+        })
+
+
+        const token = createToken(user._id.toString(), user.email, "7d")
+        const expires = new Date()
+        expires.setDate(expires.getDate()+7)
+        // to send cookie from backend to frontend
+        res.cookie(COOKIE_NAME, token,{path:"/",domain:"localhost", expires, httpOnly:true, signed : true})
+
+
+
+
+
+
+
+
+
         // we need to encrypt the password bcrypt used for this
         // const users = await User.find();
         return res.status(201).json({ message: "OK", id:user._id.toString() });
@@ -47,6 +70,23 @@ export const userLogin = async (req:Request, res:Response, next:NextFunction) =>
         if (!isPasswordCorrect) {
             return res.status(403).send("Incorrect Password");
         }
+
+        // used to clear the cookie
+        res.clearCookie(COOKIE_NAME, {
+            domain:"localhost", httpOnly:true, signed : true, path:'/',
+        })
+
+
+        const token = createToken(user._id.toString(), user.email, "7d")
+        const expires = new Date()
+        expires.setDate(expires.getDate()+7)
+        // to send cookie from backend to frontend
+        res.cookie(COOKIE_NAME, token,{path:"/",domain:"localhost", expires, httpOnly:true, signed : true})
+
+
+
+
+
 
         return res.status(200).json({ message: "OK", id:user._id.toString() });
     }
