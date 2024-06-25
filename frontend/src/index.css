@@ -10,3 +10,13 @@ html, body{
   filter:invert(100%);
 
 }
+
+.nav-link{
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
