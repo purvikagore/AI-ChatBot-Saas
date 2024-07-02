@@ -6,4 +6,7 @@ export const createToken = (id, email, expiresIn) => {
     });
     return token;
 };
+// middleware
+export const verifyToken = async () => {
+};
 //# sourceMappingURL=token-manager.js.map

@@ -36,7 +36,7 @@ export const userSignup = async (req, res, next) => {
         res.cookie(COOKIE_NAME, token, { path: "/", domain: "localhost", expires, httpOnly: true, signed: true });
         // we need to encrypt the password bcrypt used for this
         // const users = await User.find();
-        return res.status(201).json({ message: "OK", id: user._id.toString() });
+        return res.status(201).json({ message: "OK", name: user.name, email: user.email });
     }
     catch (error) {
         console.log(error);
@@ -64,7 +64,7 @@ export const userLogin = async (req, res, next) => {
         expires.setDate(expires.getDate() + 7);
         // to send cookie from backend to frontend
         res.cookie(COOKIE_NAME, token, { path: "/", domain: "localhost", expires, httpOnly: true, signed: true });
-        return res.status(200).json({ message: "OK", id: user._id.toString() });
+        return res.status(200).json({ message: "OK", name: user.name, email: user.email });
     }
     catch (error) {
         console.log(error);

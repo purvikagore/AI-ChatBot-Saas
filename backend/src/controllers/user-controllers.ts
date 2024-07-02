@@ -50,7 +50,7 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
 
         // we need to encrypt the password bcrypt used for this
         // const users = await User.find();
-        return res.status(201).json({ message: "OK", id:user._id.toString() });
+        return res.status(201).json({ message: "OK", name:user.name, email:user.email });
     }
     catch (error) {
         console.log(error);
@@ -88,7 +88,7 @@ export const userLogin = async (req:Request, res:Response, next:NextFunction) =>
 
 
 
-        return res.status(200).json({ message: "OK", id:user._id.toString() });
+        return res.status(200).json({ message: "OK",  name:user.name, email:user.email });
     }
     catch (error) {
         console.log(error);
