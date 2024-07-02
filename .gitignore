@@ -1,11 +1,5 @@
 /whatILearnt.txt
 /ILEARNT.txt
 node_modules/
-# .env
+.env
 
-OPEN_AI_SECRET=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
-OPENAI_ORGANIZATION_ID = org-Y7EWBdbBokh2OxCpuAselC33
-MONGODB_URL=mongodb+srv://purvikagore:abc123qwe@cluster0.yvwq6l2.mongodb.net/chatbot?retryWrites=true&w=majority&appName=Cluster0
-JWT_SECRET=idkwhat1234567890
-COOKIE_SECRET=anotheronedjkhaled1234567890
-PORT = 5000
