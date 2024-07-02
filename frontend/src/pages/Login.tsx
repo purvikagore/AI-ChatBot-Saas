@@ -1,8 +1,28 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import { GrLogin } from "react-icons/gr";
 import React from "react";
 import CustomizedInput from "../components/shared/CustomizedInput";
+import { IoIosLogIn } from "react-icons/io";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const auth = useAuth();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    // refresh
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    try {
+      toast.loading("Signing In", { id: "login" });
+      await auth?.login(email, password);
+      toast.success("Signed in successfully", { id: "login" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Signing in failed", { id: "login" });
+    }
+  };
   return (
     <Box width={"100%"} height={"100%"} display="flex" flex={1}>
       <Box padding={8} mt={8} display={{ md: "flex", sm: "none", xs: "none" }}>
@@ -18,6 +38,7 @@ const Login = () => {
         mt={16}
       ></Box>
       <form
+        onSubmit={handleSubmit}
         action=""
         style={{
           margin: "auto",
@@ -42,8 +63,27 @@ const Login = () => {
           >
             Login
           </Typography>
-          <CustomizedInput type="email" name = "email" label = "Email"/>
-        <CustomizedInput type="password" name = "password" label = "Password"/>
+          <CustomizedInput type="email" name="email" label="Email" />
+          <CustomizedInput type="password" name="password" label="Password" />
+
+          <Button
+            type="submit"
+            sx={{
+              px: 2,
+              py: 1,
+              mt: 2,
+              width: "400px",
+              borderRadius: 2,
+              bgcolor: "#00fffc",
+              ":hover": {
+                bgcolor: "blue",
+                color: "white",
+              },
+            }}
+            endIcon={<IoIosLogIn />}
+          >
+            Login
+          </Button>
         </Box>
       </form>
     </Box>
