@@ -9,6 +9,6 @@ export const createToken = (id: string, email: string, expiresIn:string) => {
 }
 
 // middleware
-export const verifyToken = async () => {
+export const verifyToken = async (req:Request,res:Response) => {
     
 }
