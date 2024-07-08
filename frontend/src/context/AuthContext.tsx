@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { loginUser } from "../helpers/api-communicator";
+import { checkAuthStatus, loginUser } from "../helpers/api-communicator";
 // Kaun use karega with login wihout login sign in sign up kab ayega
 
 type User = {
@@ -29,6 +29,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // fetch if user cookies are valid then skip login
+    async function checkStatus() {
+      const data = await checkAuthStatus();
+      if (data) {
+        setUser({ email: data.email, name: data.name });
+        setIsLoggedIn(true);
+    }
+    }
+    checkStatus()
   }, []);
     const login = async (email: string, password: string) => {
         const data = await loginUser(email, password);
