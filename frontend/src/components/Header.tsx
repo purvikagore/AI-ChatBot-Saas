@@ -16,15 +16,35 @@ const Header = () => {
         <div>
           {auth?.isLoggedIn ? (
             <>
-                          <NavigationLink bg="#00fffc" to="/chat" text="Go to Chat" textColor="black" />
-                          <NavigationLink bg="#51538f" to = "/" text = "Logout" textColor="white" onClick={auth.logout}/>
+              <NavigationLink
+                bg="#00fffc"
+                to="/chat"
+                text="Go to Chat"
+                textColor="black"
+              />
+              <NavigationLink
+                bg="#51538f"
+                to="/"
+                text="Logout"
+                textColor="white"
+                onClick={auth.logout}
+              />
             </>
           ) : (
-                          <>
-                          <NavigationLink bg="#00fffc" to="/login" text="Login" textColor="black" />
-                          <NavigationLink bg="#51538f" to = "/signup" text = "SignUp" textColor="white"/>
-                          
-                          </>
+            <>
+              <NavigationLink
+                bg="#00fffc"
+                to="/login"
+                text="Login"
+                textColor="black"
+              />
+              <NavigationLink
+                bg="#51538f"
+                to="/signup"
+                text="SignUp"
+                textColor="white"
+              />
+            </>
           )}
         </div>
       </Toolbar>

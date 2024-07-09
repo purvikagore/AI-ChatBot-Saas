@@ -1,27 +1,75 @@
-import { Box, Avatar, Typography, Button, dividerClasses, IconButton } from "@mui/material";
+import {
+  Box,
+  Avatar,
+  Typography,
+  Button,
+  dividerClasses,
+  IconButton,
+} from "@mui/material";
 import red from "@mui/material/colors/red";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ChatItem from "../components/chats/ChatItem";
-import {IoMdSend} from 'react-icons/io'
+import { IoMdSend } from "react-icons/io";
+import { deleteUserChats, getUserChats, sendChatRequest } from "../helpers/api-communicator";
+import toast from "react-hot-toast";
+import {useNavigate} from 'react-router-dom'
+
 
 type Message = {
   role: "user" | "assistant";
   content: string;
-}
+};
 
 const Chat = () => {
-  const inputRef = useRef<HTMLInputElement|null>(null)
+  const navigate = useNavigate()
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const auth = useAuth();
-  const [chatMessages,setChatMessages] = useState<Message[]>([])
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
     if (inputRef && inputRef.current) {
       inputRef.current.value = "";
     }
-    const newMessage : Message= { role: "user", content };
-    setChatMessages((prev) => [...prev,newMessage]) //array
+    const newMessage: Message = { role: "user", content };
+    setChatMessages((prev) => [...prev, newMessage]); //array
+    const chatData = await sendChatRequest(content);
+    setChatMessages([...chatData.chats]);
+  };
+
+  const handleDeleteChats = async () => {
+    try {
+      toast.loading("Deleting Chats",{id:"deletechats"})
+      await deleteUserChats()
+      setChatMessages([])
+      toast.success("Deleted Chats Successfully",{id:"deletechats"})
+    } catch(err) {
+      console.log(err)
+      toast.error("Deleting Chats Failed",{id:"deletechats"})
   }
+}
+
+  useLayoutEffect(() => {
+    if (auth?.isLoggedIn && auth.user) {
+      toast.loading("Loading Chats", { id: "loadchats" });
+      getUserChats()
+        .then((data) => {
+          setChatMessages([...data.chats]);
+          toast.success("Successfully Loaded the Chats", { id: "loadchats" });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Loading Failed", { id: "loadchats" });
+        });
+    }
+  }, [auth]);
+
+  useEffect(() => {
+    if (!auth?.user) {
+      return navigate("/login")
+    }  
+}, [auth])
+
   return (
     <Box
       sx={{
@@ -71,6 +119,7 @@ const Chat = () => {
             information:D
           </Typography>
           <Button
+            onClick={handleDeleteChats}
             sx={{
               width: "200px",
               my: "auto",
@@ -103,9 +152,10 @@ const Chat = () => {
             mb: 2,
             mx: "auto",
             fontWeight: "500",
+            fontFamily: "Montserrat",
           }}
         >
-          Model - GPT 3.5 Turbo
+          GPT 3.5 Turbo
         </Typography>
         <Box
           sx={{
@@ -126,25 +176,32 @@ const Chat = () => {
             <ChatItem content={chat.content} role={chat.role} key={index} />
           ))}
         </Box>
-        <div style={{ width: "100%", padding: "20px", borderRadius: 8, backgroundColor:"rgb(17,27,39)" , display:'flex',margin:'auto'}}>
-          <input
-            ref = {inputRef}
-          type="text"
+        <div
           style={{
             width: "100%",
-            backgroundColor: "transparent",
-            padding: "10",
-            border: "none",
-            outline: "none",
-            color: "white",
-            fontSize: "20px",
+            borderRadius: 8,
+            backgroundColor: "rgb(17,27,39)",
+            display: "flex",
+            margin: "auto",
           }}
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            style={{
+              width: "100%",
+              backgroundColor: "transparent",
+              padding: "30px",
+              border: "none",
+              outline: "none",
+              color: "white",
+              fontSize: "20px",
+            }}
           />
-          <IconButton onClick={handleSubmit} sx={{ m: "auto", color: 'white' }}>
+          <IconButton onClick={handleSubmit} sx={{ m: "auto", color: "white" }}>
             <IoMdSend />
           </IconButton>
         </div>
-        
       </Box>
     </Box>
   );

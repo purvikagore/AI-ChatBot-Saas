@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllUsers, userLogin, userSignup } from "../controllers/user-controllers.js";
+import { getAllUsers, userLogin, userlogout, userSignup, verifyUser } from "../controllers/user-controllers.js";
 import { loginValidator, sigupValidator, validate } from "../utils/validators.js";
 import { verifyToken } from "../utils/token-manager.js";
 const userRoutes = Router();
@@ -8,6 +8,7 @@ userRoutes.get("/", getAllUsers);
 // use middleware
 userRoutes.post("/signup", validate(sigupValidator), userSignup);
 userRoutes.post("/login", validate(loginValidator), userLogin);
-userRoutes.get("/auth-status", verifyToken, userLogin);
+userRoutes.get("/auth-status", verifyToken, verifyUser);
+userRoutes.get("/logout", verifyToken, userlogout);
 export default userRoutes;
 //# sourceMappingURL=user-routes.js.map
